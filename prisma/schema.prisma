@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,4 +5,82 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model organisations {
+  org_id        Int       @id @default(autoincrement())
+  name          String
+  contact_email String?
+  created_at    DateTime? @default(now()) @db.Timestamp(6)
+  updated_at    DateTime? @default(now()) @db.Timestamp(6)
+  user          user[]
+}
+
+model user {
+  user_id         Int              @id @default(autoincrement())
+  first_name      String
+  last_name       String
+  position        String?
+  primary_email   String           @unique
+  secondary_email String?
+  description     String?
+  dob             DateTime?        @db.Date
+  asic            String?
+  last_login      DateTime?        @db.Timestamp(6)
+  updated_at      DateTime?        @default(now()) @db.Timestamp(6)
+  created_at      DateTime?        @default(now()) @db.Timestamp(6)
+  org_id          Int?
+  organisations   organisations?   @relation(fields: [org_id], references: [org_id], onDelete: NoAction, onUpdate: NoAction)
+  user_addresses  user_addresses[]
+  user_contacts   user_contacts[]
+  user_dates      user_dates[]
+  user_documents  user_documents[]
+}
+
+model user_addresses {
+  address_id    Int       @id @default(autoincrement())
+  user_id       Int?
+  address_line1 String
+  address_line2 String?
+  suburb        String
+  state         String
+  postal_code   String
+  country       String
+  created_at    DateTime? @default(now()) @db.Timestamp(6)
+  updated_at    DateTime? @default(now()) @db.Timestamp(6)
+  user          user?     @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model user_contacts {
+  contact_id Int       @id @default(autoincrement())
+  user_id    Int?
+  phone      String?
+  mobile     String?
+  fax        String?
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  updated_at DateTime? @default(now()) @db.Timestamp(6)
+  user       user?     @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model user_dates {
+  date_id                 Int       @id @default(autoincrement())
+  user_id                 Int?
+  probationary_date       DateTime? @db.Date
+  performance_review_date DateTime? @db.Date
+  created_at              DateTime? @default(now()) @db.Timestamp(6)
+  updated_at              DateTime? @default(now()) @db.Timestamp(6)
+  user                    user?     @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model user_documents {
+  document_id            Int       @id @default(autoincrement())
+  user_id                Int?
+  passport_number        String?
+  passport_nationality   String?
+  passport_expiry_date   DateTime? @db.Date
+  drivers_license_number String?
+  frequent_flyer_number  String?
+  created_at             DateTime? @default(now()) @db.Timestamp(6)
+  updated_at             DateTime? @default(now()) @db.Timestamp(6)
+  user                   user?     @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
 }
