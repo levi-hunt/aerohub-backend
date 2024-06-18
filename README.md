@@ -12,8 +12,5 @@
     npx prisma migrate dev --name init
     npx prisma generate
     ```
-5. Install nodemon as a dev dependency:
-   ```bash
-   npm install --save-dev nodemon
-   ```
+5. Rename `.env.defaults` to `.env`
 6. Run the server via `npm run dev`
