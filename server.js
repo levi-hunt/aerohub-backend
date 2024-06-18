@@ -3,16 +3,20 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerDocument = require('./swagger.json');
 
+// Import Routing
+const userRoutes = require('./routes/users.js');
+
 const app = express();
 const port = 3000;
 
 const swaggerOptions = {
     swaggerDefinition: swaggerDocument,
-    apis: ['./server.js'],
+    apis: ['./server.js', 'routes/users.js'],
 };
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 
+app.use('/user', userRoutes)
 app.use('/api', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 /**
