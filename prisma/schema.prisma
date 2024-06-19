@@ -13,28 +13,7 @@ model organisations {
   contact_email String?
   created_at    DateTime? @default(now()) @db.Timestamp(6)
   updated_at    DateTime? @default(now()) @db.Timestamp(6)
-  user          user[]
-}
-
-model user {
-  user_id         Int              @id @default(autoincrement())
-  first_name      String
-  last_name       String
-  position        String?
-  primary_email   String           @unique
-  secondary_email String?
-  description     String?
-  dob             DateTime?        @db.Date
-  asic            String?
-  last_login      DateTime?        @db.Timestamp(6)
-  updated_at      DateTime?        @default(now()) @db.Timestamp(6)
-  created_at      DateTime?        @default(now()) @db.Timestamp(6)
-  org_id          Int?
-  organisations   organisations?   @relation(fields: [org_id], references: [org_id], onDelete: NoAction, onUpdate: NoAction)
-  user_addresses  user_addresses[]
-  user_contacts   user_contacts[]
-  user_dates      user_dates[]
-  user_documents  user_documents[]
+  users         users[]
 }
 
 model user_addresses {
@@ -48,7 +27,7 @@ model user_addresses {
   country       String
   created_at    DateTime? @default(now()) @db.Timestamp(6)
   updated_at    DateTime? @default(now()) @db.Timestamp(6)
-  user          user?     @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+  user          users?    @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model user_contacts {
@@ -59,7 +38,7 @@ model user_contacts {
   fax        String?
   created_at DateTime? @default(now()) @db.Timestamp(6)
   updated_at DateTime? @default(now()) @db.Timestamp(6)
-  user       user?     @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+  user       users?    @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model user_dates {
@@ -69,7 +48,7 @@ model user_dates {
   performance_review_date DateTime? @db.Date
   created_at              DateTime? @default(now()) @db.Timestamp(6)
   updated_at              DateTime? @default(now()) @db.Timestamp(6)
-  user                    user?     @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+  user                    users?    @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model user_documents {
@@ -82,5 +61,26 @@ model user_documents {
   frequent_flyer_number  String?
   created_at             DateTime? @default(now()) @db.Timestamp(6)
   updated_at             DateTime? @default(now()) @db.Timestamp(6)
-  user                   user?     @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+  user                   users?    @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model users {
+  user_id         Int              @id(map: "user_pkey") @default(autoincrement())
+  first_name      String
+  last_name       String
+  position        String?
+  primary_email   String           @unique(map: "user_primary_email_key")
+  secondary_email String?
+  description     String?
+  dob             DateTime?        @db.Date
+  asic            String?
+  last_login      DateTime?        @db.Timestamp(6)
+  updated_at      DateTime?        @default(now()) @db.Timestamp(6)
+  created_at      DateTime?        @default(now()) @db.Timestamp(6)
+  org_id          Int?
+  user_addresses  user_addresses[]
+  user_contacts   user_contacts[]
+  user_dates      user_dates[]
+  user_documents  user_documents[]
+  organisations   organisations?   @relation(fields: [org_id], references: [org_id], onDelete: NoAction, onUpdate: NoAction, map: "user_org_id_fkey")
 }
