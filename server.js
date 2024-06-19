@@ -11,15 +11,17 @@ const userRoutes = require('./routes/users.js');
 const app = express();
 const port = 3000;
 
+app.use(express.json());
+app.use('/user', userRoutes);
+
 const swaggerOptions = {
     swaggerDefinition: swaggerDocument,
     apis: ['./server.js', 'routes/users.js'],
 };
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
-
-app.use('/user', userRoutes)
 app.use('/api', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
 
 /**
  * @swagger

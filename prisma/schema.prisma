@@ -78,6 +78,7 @@ model users {
   updated_at      DateTime?        @default(now()) @db.Timestamp(6)
   created_at      DateTime?        @default(now()) @db.Timestamp(6)
   org_id          Int?
+  password        String
   user_addresses  user_addresses[]
   user_contacts   user_contacts[]
   user_dates      user_dates[]
