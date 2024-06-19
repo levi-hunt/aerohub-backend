@@ -37,6 +37,34 @@ router.post('/createUser', async (req, res) => {
     }
 });
 
+router.put('/:id', async (req, res) => {
+    try {
+        const { first_name, last_name, primary_email } = req.body;
+        const userId = Number(req.params.id);
+
+        if (isNaN(userId)) {
+            console.error('Invalid user ID, it is NaN');
+            return res.status(400).json({ error: 'Invalid user ID' });
+        }
+
+        const updateUser = await prisma.users.update({
+            where: {
+                user_id: userId
+            },
+            data: {
+                first_name,
+                last_name,
+                primary_email,
+            },
+        });
+
+        res.json(updateUser);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 router.get('/:id', async (req, res) => {
     const getUser = await prisma.users.findFirst({
         where: { user_id: Number(req.params.id) }

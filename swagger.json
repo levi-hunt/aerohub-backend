@@ -88,6 +88,67 @@
             "description": "User Id"
           }
         ]
+      },
+      "put": {
+        "summary": "Update a user",
+        "description": "Updates an existing user with the given ID.",
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "User Id"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "first_name": {
+                    "type": "string",
+                    "example": "John"
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "example": "Doe"
+                  },
+                  "primary_email": {
+                    "type": "string",
+                    "example": "john.doe@example.com"
+                  }
+                },
+                "required": [
+                  "first_name",
+                  "last_name",
+                  "primary_email"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User updated successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
       }
     },
     "/org/createOrg": {
@@ -139,10 +200,10 @@
         "tags": [
           "Organisation"
         ],
-        "summary": "Returns org id",
+        "summary": "Returns org data based on id",
         "responses": {
           "200": {
-            "description": "Successfully printed \"The org at id {org_id}\""
+            "description": "Successfully printed Organisation data"
           }
         },
         "parameters": [
@@ -153,7 +214,7 @@
               "type": "integer"
             },
             "required": true,
-            "description": "Org Id"
+            "description": "Organisation ID number"
           }
         ]
       }
