@@ -2,6 +2,8 @@
 const express = require('express');
 const router = express.Router();
 
+const createOrg = require('../controllers/orgControllers')
+
 router.route('/:id')
     .get(async (req, res) => {
         res.send("Single org ID here");
@@ -17,8 +19,8 @@ router.route('/')
     .get(async (req, res) => {
         res.send("Returns every org");
     })
-    .post(async (req, res) => {
-        res.send("This creates an org");
+    .post(createOrg => {
+
     })
 
 module.exports = router;
