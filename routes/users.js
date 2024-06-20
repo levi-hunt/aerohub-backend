@@ -4,7 +4,7 @@ const router = express.Router();
 
 // Define your user routes here
 router.get('/', (req, res) => {
-    res.send('User route');
+    res.send('Users route');
 });
 
 module.exports = router;

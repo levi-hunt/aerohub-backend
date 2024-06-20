@@ -40,8 +40,8 @@ app.get('/health', (req, res) => {
 });
 
 // API routes
-app.use('/user', userRoutes);
-app.use('/org', orgRoutes);
+app.use('/users', userRoutes);
+app.use('/organisations', orgRoutes);
 
 app.get('/hello', (req, res) => {
     res.status(200).send('Hello, world!');
