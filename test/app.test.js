@@ -1,6 +1,6 @@
 // test/app.test.js
-const request = require('supertest');
-const app = require('../server');
+import request from 'supertest';
+import app from '../server.js';
 
 describe('GET /hello', function () {
     it('should return Hello, world!', function (done) {

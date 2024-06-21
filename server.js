@@ -1,24 +1,23 @@
-// server.js
+import express, { json, urlencoded } from 'express';
+import compression from 'compression';
+import helmet from 'helmet';
+import morgan from 'morgan';
+import rateLimit from 'express-rate-limit';
+import cors from 'cors';
+import { serve, setup } from 'swagger-ui-express';
+import swaggerDocument from './swagger.json' assert { type: 'json' };
+import userRoutes from './routes/users.js';
+import orgRoutes from './routes/organisations.js';
 
-require('dotenv').config(); // Load environment variables
-
-const express = require('express');
-const compression = require('compression');
-const helmet = require('helmet');
-const morgan = require('morgan');
-const rateLimit = require('express-rate-limit');
-const cors = require('cors');
-const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./swagger.json');
-const userRoutes = require('./routes/users');
-const orgRoutes = require('./routes/organisations')
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 // Middleware setup
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(json());
+app.use(urlencoded({ extended: true }));
 app.use(cors()); // Enable CORS
 app.use(helmet()); // Security headers
 app.use(compression()); // Gzip compression
@@ -32,7 +31,7 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // Swagger setup for API documentation
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api-docs', serve, setup(swaggerDocument));
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -60,4 +59,4 @@ const server = app.listen(port, () => {
     console.log(`Server running on port ${port} in ${process.env.NODE_ENV} mode`);
 });
 
-module.exports = app;
+export default app;

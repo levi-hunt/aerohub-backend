@@ -1,8 +1,8 @@
 // routes/org.js
-const express = require('express');
-const router = express.Router();
+import { Router } from 'express';
+const router = Router();
 
-const createOrg = require('../controllers/orgControllers')
+import orgWriteDb from '../controllers/orgController.js';
 
 router.route('/:id')
     .get(async (req, res) => {
@@ -19,8 +19,6 @@ router.route('/')
     .get(async (req, res) => {
         res.send("Returns every org");
     })
-    .post(createOrg => {
+    .post(orgWriteDb)
 
-    })
-
-module.exports = router;
+export default router;
