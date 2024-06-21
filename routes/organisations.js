@@ -6,9 +6,7 @@ import orgController from '../controllers/orgController.js';
 
 router.route('/:org_id')
     .get(orgController.orgGetUnique)
-    .put(async (req, res) => {
-        res.send("This updates an unique org");
-    })
+    .put(orgController.orgUpdateUnique)
     .delete(async (req, res) => {
         res.send("This will delete an unique org");
     })
