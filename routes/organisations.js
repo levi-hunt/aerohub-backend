@@ -2,12 +2,10 @@
 import { Router } from 'express';
 const router = Router();
 
-import orgWriteDb from '../controllers/orgController.js';
+import orgController from '../controllers/orgController.js';
 
-router.route('/:id')
-    .get(async (req, res) => {
-        res.send("Single org ID here");
-    })
+router.route('/:org_id')
+    .get(orgController.orgGetUnique)
     .put(async (req, res) => {
         res.send("This updates an unique org");
     })
@@ -16,9 +14,7 @@ router.route('/:id')
     })
 
 router.route('/')
-    .get(async (req, res) => {
-        res.send("Returns every org");
-    })
-    .post(orgWriteDb)
+    .get(orgController.orgGetAll)
+    .post(orgController.orgWriteDb)
 
 export default router;
