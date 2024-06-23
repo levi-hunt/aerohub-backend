@@ -1,7 +1,11 @@
-import { check, validationResult, query } from 'express-validator';
+import { check, validationResult, query, param } from 'express-validator';
 
 const validateOrgUnique = [
-    query('org_id').trim().notEmpty().escape(),
+    param('org_id')
+        .trim()
+        .notEmpty().withMessage('Organization ID is required')
+        .isInt({ min: 1 }).withMessage('Organization ID must be a positive integer')
+        .toInt(),
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -10,6 +14,6 @@ const validateOrgUnique = [
 
         next();
     }
-]
+];
 
-export default { validateOrgUnique }
+export default { validateOrgUnique };
