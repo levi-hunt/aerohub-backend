@@ -5,7 +5,7 @@ import orgController from '../controllers/orgController.js';
 import orgValidators from '../validators/orgValidators.js'
 
 router.route('/:org_id')
-    .get(orgValidators.validateOrgUnique, orgController.orgGetUnique)
+    .get(orgValidators.valOrgGet, orgController.orgGetUnique)
     .put(orgController.orgUpdateUnique)
     .delete(async (req, res) => {
         res.send("This will delete an unique org");
