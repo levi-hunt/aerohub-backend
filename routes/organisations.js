@@ -1,11 +1,11 @@
-// routes/org.js
 import { Router } from 'express';
 const router = Router();
 
 import orgController from '../controllers/orgController.js';
+import { validateOrgUnique } from '../validators/orgValidators.js'
 
 router.route('/:org_id')
-    .get(orgController.orgGetUnique)
+    .get(validateOrgUnique, orgController.orgGetUnique)
     .put(orgController.orgUpdateUnique)
     .delete(async (req, res) => {
         res.send("This will delete an unique org");
