@@ -42,4 +42,23 @@ const valOrgPut = [
     }
 ];
 
-export default { valOrgGet, valOrgPut };
+const valOrgPost = [
+    body('name')
+        .trim()
+        .isLength({ min: 1, max: 100 }).withMessage('Company name must be between 1 and 100 characters')
+        .matches(/^[a-zA-Z0-9\s.'-]+$/).withMessage('Company name contains invalid characters'),
+    body('contact_email')
+        .isEmail().withMessage('Must be a valid email address')
+        .normalizeEmail()
+        .isLength({ max: 255 }).withMessage('Email must be at most 255 characters long'),
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        next();
+    }
+];
+
+export default { valOrgGet, valOrgPut, valOrgPost };

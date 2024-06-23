@@ -13,6 +13,6 @@ router.route('/:org_id')
 
 router.route('/')
     .get(orgController.orgGetAll)
-    .post(orgController.orgWriteDb)
+    .post(orgValidators.valOrgPost, orgController.orgWriteDb)
 
 export default router;
