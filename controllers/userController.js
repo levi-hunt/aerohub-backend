@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient()
 
 // GET User Unique
@@ -46,18 +47,26 @@ const getAll = async (req, res, next) => {
 
 // CREATE New User
 const createUser = async (req, res, next) => {
+    const saltRounds = 10;
     try {
         const { first_name, last_name, primary_email, password, org_id } = req.body
-        const createUser = await prisma.users.create({
-            data: {
-                first_name,
-                last_name,
-                primary_email,
-                password,
-                org_id
+        bcrypt.hash(password, saltRounds, async (err, hash) => {
+            try {
+                const createUser = await prisma.users.create({
+                    data: {
+                        first_name,
+                        last_name,
+                        primary_email,
+                        password: hash,
+                        org_id
+                    }
+                })
+                res.json(createUser)
+            } catch (err) {
+                next(err)
             }
-        })
-        res.json(createUser)
+
+        });
     } catch (err) {
         next(err)
     }

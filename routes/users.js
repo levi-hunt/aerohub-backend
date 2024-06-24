@@ -2,6 +2,7 @@ import { Router } from 'express';
 const router = Router();
 
 import userController from '../controllers/userController.js';
+import userValidator from '../validators/userValidators.js';
 
 router.route('/:user_id')
     .get()
@@ -10,7 +11,7 @@ router.route('/:user_id')
 
 router.route('/')
     .get(userController.getAll)
-    .post(userController.createUser);
+    .post(userValidator.valCreateUser, userController.createUser);
 
 
 
