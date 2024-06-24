@@ -1,4 +1,4 @@
-import { validationResult, param, body } from 'express-validator';
+import { validationResult, body } from 'express-validator';
 
 const valCreateUser = [
     body('first_name')
@@ -24,6 +24,14 @@ const valCreateUser = [
         .notEmpty().withMessage('Organization ID is required')
         .isInt({ min: 1 }).withMessage('Organization ID must be a positive integer')
         .toInt(),
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+        next();
+    }
 ]
 
 export default { valCreateUser }

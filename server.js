@@ -23,7 +23,7 @@ app.use(urlencoded({ extended: true }));
 app.use(cors()); // Enable CORS
 app.use(helmet()); // Security headers
 app.use(compression()); // Gzip compression
-app.use(morgan('combined')); // Logging
+// app.use(morgan('combined')); // Logging
 
 // Rate limiting to prevent abuse
 const limiter = rateLimit({

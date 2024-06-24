@@ -11,9 +11,15 @@ const genAuthToken = (user) => {
     return token;
 };
 
-function verifyAuthToken(token) {
+const verifyAuthToken = (token) => {
     try {
-        return jwt.verify(token, process.env.JWT_SECRET);
+        return jwt.verify(token, process.env.JWT_SECRET, function (err, decoded) {
+            if (err) {
+                console.log(err)
+            } else {
+                console.log(decoded)
+            }
+        })
     } catch (err) {
         return res.status(401).send("Unauthorized");
     }
