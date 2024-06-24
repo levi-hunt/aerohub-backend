@@ -47,10 +47,20 @@ const getAll = async (req, res, next) => {
 // CREATE New User
 const createUser = async (req, res, next) => {
     try {
-
+        const { first_name, last_name, primary_email, password, org_id } = req.body
+        const createUser = await prisma.users.create({
+            data: {
+                first_name,
+                last_name,
+                primary_email,
+                password,
+                org_id
+            }
+        })
+        res.json(createUser)
     } catch (err) {
-
+        next(err)
     }
 }
 
-export default { getAll }
+export default { getAll, createUser }

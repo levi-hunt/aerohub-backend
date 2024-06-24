@@ -10,7 +10,7 @@ router.route('/:user_id')
 
 router.route('/')
     .get(userController.getAll)
-    .post()
+    .post(userController.createUser);
 
 
 
