@@ -5,9 +5,11 @@ import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 import cors from 'cors';
 import { serve, setup } from 'swagger-ui-express';
+import auth from './middlewares/auth.js'
 import swaggerDocument from './swagger.json' assert { type: 'json' };
 import userRoutes from './routes/users.js';
 import orgRoutes from './routes/organisations.js';
+import authRoutes from './routes/auth.js'
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -41,8 +43,9 @@ app.get('/health', (req, res) => {
 // API routes
 app.use('/users', userRoutes);
 app.use('/organisations', orgRoutes);
+app.use('/', authRoutes)
 
-app.get('/hello', (req, res) => {
+app.get('/hello', auth, (req, res) => {
     res.status(200).send('Hello, world!');
 });
 

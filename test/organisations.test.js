@@ -16,6 +16,8 @@ describe('GET /organisations', () => {
 });
 
 describe('POST /organisations', () => {
+    let org_id;
+
     it('should create a new organisation entry', (done) => {
         request(app)
             .post('/organisations')
@@ -24,6 +26,20 @@ describe('POST /organisations', () => {
             .expect('Content-Type', /json/)
             .expect(200, done);
     });
+
+    // afterEach(async () => {
+    //     const orgGetUnique = await prisma.organisations.findUnique({
+    //         where: {
+    //             name: 'Company Name',
+    //             contact_email: 'company@email.com'
+    //         },
+    //     })
+    //     org_id = orgGetUnique.org_id
+
+    //     await prisma.organisations.delete({
+    //         where: { org_id: orgId }
+    //     });
+    // });
 });
 
 describe('POST /organisations', () => {
