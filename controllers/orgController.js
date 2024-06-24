@@ -66,4 +66,18 @@ const orgWriteDb = async (req, res, next) => {
     }
 }
 
-export default { orgWriteDb, orgGetAll, orgGetUnique, orgUpdateUnique }
+const orgDelete = async (req, res, next) => {
+    try {
+        const { org_id } = req.params
+        const deleteUser = await prisma.organisations.delete({
+            where: {
+                org_id: Number(org_id),
+            },
+        })
+        res.json(deleteUser)
+    } catch (err) {
+        next(err)
+    }
+}
+
+export default { orgWriteDb, orgGetAll, orgGetUnique, orgUpdateUnique, orgDelete }
