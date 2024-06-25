@@ -1,4 +1,4 @@
-import { validationResult, body } from 'express-validator';
+import { validationResult, body, param } from 'express-validator';
 
 const valGetUser = [
     param('user_id')
@@ -48,7 +48,7 @@ const valUpdateUser = [
         }
         next();
     }
-];
+]
 
 const valCreateUser = [
     body('first_name')
