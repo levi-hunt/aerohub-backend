@@ -5,8 +5,8 @@ import userController from '../controllers/userController.js';
 import userValidator from '../validators/userValidators.js';
 
 router.route('/:user_id')
-    .get(userController.getUser)
-    .put(userController.updateUser)
+    .get(userValidator.valGetUser, userController.getUser)
+    .put(userValidator.valUpdateUser, userController.updateUser)
     .delete()
 
 router.route('/')
