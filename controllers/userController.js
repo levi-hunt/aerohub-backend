@@ -26,7 +26,15 @@ const getUser = async (req, res, next) => {
 // UPDATE User Unique
 const updateUser = async (req, res, next) => {
     try {
+        const current_oId = req.user.org_id;
+        const current_uId = req.user.user_id;
 
+        const { user_id } = req.params;
+        const { first_name, last_name, primary_email, password } = req.body;
+
+        // Check that current user and updated user are not the same id (cant change permissions for themself)
+        // Can change their own password n whatever... dont know how that'll work
+        // Check current user org and updated user org are the same so you can't update other organisations users.
     } catch (err) {
 
     }
@@ -50,6 +58,9 @@ const getAll = async (req, res, next) => {
                 org_id
             }
         })
+        if (!getAll) {
+            res.status(404).json({ message: "Users not found" });
+        }
         res.status(200).json(getAll)
     } catch (err) {
         next(err)
@@ -84,4 +95,4 @@ const createUser = async (req, res, next) => {
     }
 }
 
-export default { getUser, getAll, createUser }
+export default { getUser, updateUser, deleteUser, getAll, createUser }
