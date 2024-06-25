@@ -3,16 +3,15 @@ const router = Router();
 
 import userController from '../controllers/userController.js';
 import userValidator from '../validators/userValidators.js';
-import auth from '../middlewares/auth.js'
 
 router.route('/:user_id')
-    .get()
+    .get(userController.getUser)
     .put()
     .delete()
 
 router.route('/')
-    .get(auth, userController.getAll)
-    .post(auth, userValidator.valCreateUser, userController.createUser);
+    .get(userController.getAll)
+    .post(userValidator.valCreateUser, userController.createUser);
 
 
 
