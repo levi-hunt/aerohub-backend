@@ -520,6 +520,94 @@
             }
           }
         }
+      },
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Update an user by ID",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "first_name": {
+                    "type": "string",
+                    "example": "Updated First Name"
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "example": "Updated Last Name"
+                  },
+                  "primary_email": {
+                    "type": "string",
+                    "example": "updatedemail@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "Newpassword123!"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "first_name": {
+                      "type": "string"
+                    },
+                    "last_name": {
+                      "type": "string"
+                    },
+                    "primary_email": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

@@ -6,7 +6,7 @@ import userValidator from '../validators/userValidators.js';
 
 router.route('/:user_id')
     .get(userController.getUser)
-    .put()
+    .put(userController.updateUser)
     .delete()
 
 router.route('/')
