@@ -18,12 +18,24 @@
     npx prisma migrate dev --name init
     npx prisma generate
     ```
-7. Run the server via `npm run dev`
 
 ## Usage
 Run the following to start up the development server:
 ```bash
-nodemon server.js
+npm run dev
 ```
 When you navigate to `/`, you'll be shown the SwaggerDocs that cover each API route.
 When developing, please try to follow OpenAPI conventions found [here](https://swagger.io/specification/)
+
+Navigate to `http://localhost:3000/api-docs` to be greeted with the SwaggerUI.
+From here, login with the user account below through the `/login` endpoint:
+   ```json
+   {
+      "primary_email": "test@aerohub.com.au",
+      "password": "Aerohub123!"
+   }
+   ```
+Copy the JWT token that's returned (without the quotes " ")
+Scroll to the top of the SwaggerUI and paste the JWT into the Authorization modal.
+
+This will enable you to interact with all available endpoints *until I implement permissions
