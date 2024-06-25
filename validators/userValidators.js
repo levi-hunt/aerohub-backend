@@ -11,7 +11,6 @@ const valGetUser = [
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-
         next();
     }
 ];
@@ -74,7 +73,6 @@ const valCreateUser = [
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
-
         next();
     }
 ]

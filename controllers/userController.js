@@ -1,6 +1,5 @@
 import { Prisma, PrismaClient } from '@prisma/client'
 import bcrypt from 'bcryptjs';
-import e from 'express';
 const prisma = new PrismaClient()
 
 // GET User Unique
@@ -23,77 +22,73 @@ const getUser = async (req, res, next) => {
     }
 }
 
-// UPDATE User Unique
+// UPDATE Unique User
 const updateUser = async (req, res, next) => {
     const saltRounds = 10;
-
     const current_oId = req.user.org_id;
-    const current_uId = req.user.user_id;
-
     const { user_id } = req.params;
     const { first_name, last_name, primary_email, password } = req.body;
 
-    const data = {}
-
-    if (first_name !== undefined) data.first_name = first_name;
-    if (last_name !== undefined) data.last_name = last_name;
-    if (primary_email !== undefined) data.primary_email = primary_email;
+    // Initialize update data object
+    const data = {
+        ...(first_name !== undefined && { first_name }),
+        ...(last_name !== undefined && { last_name }),
+        ...(primary_email !== undefined && { primary_email })
+    };
 
     try {
+        // Handle password change, if provided
         if (password !== undefined) {
-            bcrypt.hash(password, saltRounds, async (err, hash) => {
-                try {
-                    data.password = hash
-
-                    const updateUser = await prisma.users.update({
-                        where: {
-                            user_id: Number(user_id),
-                            org_id: Number(current_oId)
-                        },
-                        data
-                    })
-
-                    if (!updateUser) {
-                        res.status(404).json({ message: "Users not found" });
-                    }
-
-                    res.json(updateUser)
-                } catch (err) {
-                    next(err)
-                }
-            })
-        } else {
-            try {
-                const updateUser = await prisma.users.update({
-                    where: {
-                        user_id: user_id,
-                        org_id: current_oId
-                    },
-                    data
-                })
-
-                if (!updateUser) {
-                    res.status(404).json({ message: "Users not found" });
-                }
-                res.json(updateUser)
-            } catch (err) {
-                next(err)
-            }
+            const hash = await bcrypt.hash(password, saltRounds);
+            data.password = hash;
         }
-        // Check that current user and updated user are not the same id (cant change permissions for themself)
-        // Can change their own password n whatever... dont know how that'll work
-        // Check current user org and updated user org are the same so you can't update other organisations users.
+
+        // Update the user in the database
+        const updateUser = await prisma.users.update({
+            where: {
+                user_id: parseInt(user_id),  // Ensure type safety
+                org_id: parseInt(current_oId)
+            },
+            data
+        });
+
+        // Handle no user found
+        if (!updateUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.json(updateUser);
     } catch (err) {
-        next(err)
+        if (err instanceof prisma.PrismaClientKnownRequestError) {
+            // You can add specific error handling for Prisma errors here
+            res.status(400).json({ message: "Bad request", details: err.message });
+        } else {
+            next(err);
+        }
     }
 }
+
 
 // DELETE User Unique
 const deleteUser = async (req, res, next) => {
     try {
+        const org_id = req.user.org_id;
+        const { user_id } = req.params
+        const deleteUser = await prisma.users.delete({
+            where: {
+                user_id: parseInt(user_id),
+                org_id: parseInt(org_id)
+            },
+        })
 
+        // Handle no user found
+        if (!deleteUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(204).json({ message: "Deleted", details: `Successfully deleted User ${deleteUser.user_id} ${deleteUser.first_name} ${deleteUser.last_name}.` })
     } catch (err) {
-
+        next(err)
     }
 }
 
