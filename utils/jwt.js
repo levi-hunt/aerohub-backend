@@ -18,6 +18,7 @@ const verifyAuthToken = (token) => {
                 console.log(err)
             } else {
                 console.log(decoded)
+                return decoded
             }
         })
     } catch (err) {

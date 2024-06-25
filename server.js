@@ -23,7 +23,7 @@ app.use(urlencoded({ extended: true }));
 app.use(cors()); // Enable CORS
 app.use(helmet()); // Security headers
 app.use(compression()); // Gzip compression
-// app.use(morgan('combined')); // Logging
+app.use(morgan('combined')); // Logging
 
 // Rate limiting to prevent abuse
 const limiter = rateLimit({
@@ -35,15 +35,15 @@ app.use(limiter);
 // Swagger setup for API documentation
 app.use('/api-docs', serve, setup(swaggerDocument));
 
-// Health check endpoint
-app.get('/health', (req, res) => {
-    res.status(200).send('OK');
-});
+// Authentication Route
+app.use('/', authRoutes)
+
+// Auth Middleware
+app.use('/', auth)
 
 // API routes
 app.use('/users', userRoutes);
 app.use('/organisations', orgRoutes);
-app.use('/', authRoutes)
 
 app.get('/hello', auth, (req, res) => {
     res.status(200).send('Hello, world!');
