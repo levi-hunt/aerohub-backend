@@ -437,18 +437,13 @@
                   "password": {
                     "type": "string",
                     "example": "password123"
-                  },
-                  "org_id": {
-                    "type": "integer",
-                    "example": 1
                   }
                 },
                 "required": [
                   "first_name",
                   "last_name",
                   "primary_email",
-                  "password",
-                  "org_id"
+                  "password"
                 ]
               }
             }

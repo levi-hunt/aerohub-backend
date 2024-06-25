@@ -38,7 +38,12 @@ const deleteUser = async (req, res, next) => {
 // GET All Users
 const getAll = async (req, res, next) => {
     try {
-        const getAll = await prisma.users.findMany({})
+        const { user_id, org_id } = req.user;
+        const getAll = await prisma.users.findMany({
+            where: {
+                org_id
+            }
+        })
         res.status(200).json(getAll)
     } catch (err) {
         next(err)
@@ -49,7 +54,8 @@ const getAll = async (req, res, next) => {
 const createUser = async (req, res, next) => {
     const saltRounds = 10;
     try {
-        const { first_name, last_name, primary_email, password, org_id } = req.body
+        const { user_id, org_id } = req.user;
+        const { first_name, last_name, primary_email, password } = req.body;
         bcrypt.hash(password, saltRounds, async (err, hash) => {
             try {
                 const createUser = await prisma.users.create({

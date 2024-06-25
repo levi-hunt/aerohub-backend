@@ -19,11 +19,6 @@ const valCreateUser = [
         .trim()
         .notEmpty().withMessage('A Password is required')
         .isStrongPassword().withMessage("Password is not strong enough"),
-    body('org_id')
-        .trim()
-        .notEmpty().withMessage('Organization ID is required')
-        .isInt({ min: 1 }).withMessage('Organization ID must be a positive integer')
-        .toInt(),
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
