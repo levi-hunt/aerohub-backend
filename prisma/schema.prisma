@@ -12,13 +12,13 @@ model organisations {
   name          String
   contact_email String?
   created_at    DateTime? @default(now()) @db.Timestamp(6)
-  updated_at    DateTime? @default(now()) @db.Timestamp(6)
+  updated_at    DateTime? @updatedAt
   users         users[]
 }
 
 model user_addresses {
   address_id    Int       @id @default(autoincrement())
-  user_id       Int?
+  user_id       Int
   address_line1 String
   address_line2 String?
   suburb        String
@@ -26,62 +26,127 @@ model user_addresses {
   postal_code   String
   country       String
   created_at    DateTime? @default(now()) @db.Timestamp(6)
-  updated_at    DateTime? @default(now()) @db.Timestamp(6)
+  updated_at    DateTime? @updatedAt
   user          users?    @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model user_contacts {
   contact_id Int       @id @default(autoincrement())
-  user_id    Int?
+  user_id    Int
   phone      String?
   mobile     String?
   fax        String?
   created_at DateTime? @default(now()) @db.Timestamp(6)
-  updated_at DateTime? @default(now()) @db.Timestamp(6)
+  updated_at DateTime? @updatedAt
   user       users?    @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model user_dates {
   date_id                 Int       @id @default(autoincrement())
-  user_id                 Int?
+  user_id                 Int
   probationary_date       DateTime? @db.Date
   performance_review_date DateTime? @db.Date
   created_at              DateTime? @default(now()) @db.Timestamp(6)
-  updated_at              DateTime? @default(now()) @db.Timestamp(6)
+  updated_at              DateTime? @updatedAt
   user                    users?    @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model user_documents {
   document_id            Int       @id @default(autoincrement())
-  user_id                Int?
+  user_id                Int
   passport_number        String?
   passport_nationality   String?
   passport_expiry_date   DateTime? @db.Date
   drivers_license_number String?
   frequent_flyer_number  String?
   created_at             DateTime? @default(now()) @db.Timestamp(6)
-  updated_at             DateTime? @default(now()) @db.Timestamp(6)
+  updated_at             DateTime? @updatedAt
   user                   users?    @relation(fields: [user_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model users {
-  user_id         Int              @id(map: "user_pkey") @default(autoincrement())
+  user_id         Int               @id @default(autoincrement())
   first_name      String
   last_name       String
   position        String?
-  primary_email   String           @unique(map: "user_primary_email_key")
+  primary_email   String            @unique
   secondary_email String?
   description     String?
-  dob             DateTime?        @db.Date
+  dob             DateTime?         @db.Date
   asic            String?
-  last_login      DateTime?        @db.Timestamp(6)
-  updated_at      DateTime?        @default(now()) @db.Timestamp(6)
-  created_at      DateTime?        @default(now()) @db.Timestamp(6)
-  org_id          Int?
+  last_login      DateTime?         @db.Timestamp(6)
+  updated_at      DateTime?         @updatedAt
+  created_at      DateTime?         @default(now()) @db.Timestamp(6)
+  org_id          Int
+  role            roles             @default(USER)
   password        String
   user_addresses  user_addresses[]
   user_contacts   user_contacts[]
   user_dates      user_dates[]
   user_documents  user_documents[]
-  organisations   organisations?   @relation(fields: [org_id], references: [org_id], onDelete: NoAction, onUpdate: NoAction, map: "user_org_id_fkey")
+  user_actions    action_register[]
+  organisations   organisations     @relation(fields: [org_id], references: [org_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+enum roles {
+  USER
+  INVESTIGATOR
+  SUPERADMIN
+}
+
+model action_register {
+  action_id           Int                @id @default(autoincrement())
+  created_by          Int
+  action_from         Int
+  due_date            DateTime?
+  status              action_status      @default(AWAITING_CORRECTIVE_ACTION)
+  cause_category_id   Int
+  root_cause          String?
+  preventative_action String?
+  corrective_action   String?
+  action_required     String
+  event_likelihood    event_likelihood
+  event_consequence   event_consequences
+  cause_categories    cause_categories   @relation(fields: [cause_category_id], references: [cat_id], onDelete: NoAction, onUpdate: NoAction)
+  users               users              @relation(fields: [created_by], references: [user_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model cause_categories {
+  cat_id          Int                @id @default(autoincrement())
+  name            String
+  parent_id       Int?
+  parent          cause_categories?  @relation("ParentChild", fields: [parent_id], references: [cat_id])
+  children        cause_categories[] @relation("ParentChild")
+  action_register action_register[]
+}
+
+enum action_status {
+  URGENT_ACTION
+  FURTHER_ACTION
+  AWAITING_CORRECTIVE_ACTION
+  REVIEWING_CORRECTIVE_ACTION
+  COMPLETED
+  CANCELLED
+}
+
+enum action_type {
+  REQUEST_FOR_CORRECTIVE_ACTION
+  SUGGESTED_IMPROVEMENT
+  COMPAINT
+}
+
+enum event_likelihood {
+  RARE
+  UNLIKELY
+  POSSIBLE
+  LIKELY
+  ALMOST_CERTAIN
+}
+
+enum event_consequences {
+  INSIGNIFICANT
+  MINOR
+  MODERATE
+  MAJOR
+  CATASTROPHIC
 }
