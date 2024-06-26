@@ -6,10 +6,11 @@ import rateLimit from 'express-rate-limit';
 import cors from 'cors';
 import { serve, setup } from 'swagger-ui-express';
 import auth from './middlewares/auth.js'
-import swaggerDocument from './swagger.json' assert { type: 'json' };
 import userRoutes from './routes/users.js';
 import orgRoutes from './routes/organisations.js';
 import authRoutes from './routes/auth.js'
+import fs from 'fs';
+import YAML from 'yaml';
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -33,7 +34,13 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // Swagger setup for API documentation
-app.use('/api-docs', serve, setup(swaggerDocument));
+if (process.env.NODE_ENV === 'development') {
+    const file = fs.readFileSync('./swagger.yaml', 'utf8')
+    const swaggerDocument = YAML.parse(file)
+
+    app.use('/api-docs', serve, setup(swaggerDocument));
+}
+
 
 // Authentication Route
 app.use('/', authRoutes)
