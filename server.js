@@ -41,9 +41,9 @@ if (process.env.NODE_ENV === 'development') {
     app.use('/api-docs', serve, setup(swaggerDocument));
 }
 
-app.get('/hello', (req, res) => {
-    res.status(200).send('Hello, world!');
-});
+// app.get('/hello', (req, res) => {
+//     res.status(200).send('Hello, world!');
+// });
 
 // Authentication Route
 app.use('/', authRoutes)
