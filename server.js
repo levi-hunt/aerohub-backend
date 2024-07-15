@@ -41,6 +41,9 @@ if (process.env.NODE_ENV === 'development') {
     app.use('/api-docs', serve, setup(swaggerDocument));
 }
 
+app.get('/hello', (req, res) => {
+    res.status(200).send('Hello, world!');
+});
 
 // Authentication Route
 app.use('/', authRoutes)
@@ -51,10 +54,6 @@ app.use('/', auth)
 // API routes
 app.use('/users', userRoutes);
 app.use('/organisations', orgRoutes);
-
-app.get('/hello', auth, (req, res) => {
-    res.status(200).send('Hello, world!');
-});
 
 // Graceful shutdown
 process.on('SIGTERM', async () => {
