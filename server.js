@@ -9,11 +9,10 @@ import auth from './middlewares/auth.js'
 import userRoutes from './routes/users.js';
 import orgRoutes from './routes/organisations.js';
 import authRoutes from './routes/auth.js'
-import fs from 'fs';
-import YAML from 'yaml';
-
 import dotenv from 'dotenv';
 dotenv.config();
+
+import swaggerDocument from './swagger.json' assert { type: 'json' };
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -35,21 +34,14 @@ app.use(limiter);
 
 // Swagger setup for API documentation
 if (process.env.NODE_ENV === 'development') {
-    const file = fs.readFileSync('./swagger.yaml', 'utf8')
-    const swaggerDocument = YAML.parse(file)
-
     app.use('/api-docs', serve, setup(swaggerDocument));
 }
 
-// app.get('/hello', (req, res) => {
-//     res.status(200).send('Hello, world!');
-// });
-
 // Authentication Route
-// app.use('/', authRoutes)
+app.use('/', authRoutes)
 
-// // Auth Middleware
-// app.use('/', auth)
+// Auth Middleware
+app.use('/', auth)
 
 // API routes
 app.use('/users', userRoutes);
