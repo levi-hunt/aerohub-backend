@@ -24,7 +24,7 @@ app.use(urlencoded({ extended: true }));
 app.use(cors()); // Enable CORS
 app.use(helmet()); // Security headers
 app.use(compression()); // Gzip compression
-app.use(morgan('combined')); // Logging
+// app.use(morgan('combined')); // Logging
 
 // Rate limiting to prevent abuse
 const limiter = rateLimit({
@@ -46,10 +46,10 @@ if (process.env.NODE_ENV === 'development') {
 // });
 
 // Authentication Route
-app.use('/', authRoutes)
+// app.use('/', authRoutes)
 
-// Auth Middleware
-app.use('/', auth)
+// // Auth Middleware
+// app.use('/', auth)
 
 // API routes
 app.use('/users', userRoutes);
