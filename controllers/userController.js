@@ -1,5 +1,6 @@
 import { Prisma, PrismaClient, roles } from '@prisma/client'
 import bcrypt from 'bcryptjs';
+import UserService from '../services/UserService.js';
 const prisma = new PrismaClient()
 
 // GET User Unique
@@ -24,43 +25,20 @@ const getUser = async (req, res, next) => {
 
 // UPDATE Unique User
 const updateUser = async (req, res, next) => {
-    const saltRounds = 10;
     const current_oId = req.user.org_id;
     const { user_id } = req.params;
-    const { first_name, last_name, primary_email, password } = req.body;
-
-    // Initialize update data object
-    const data = {
-        ...(first_name !== undefined && { first_name }),
-        ...(last_name !== undefined && { last_name }),
-        ...(primary_email !== undefined && { primary_email })
-    };
+    const userData = req.body;
 
     try {
-        // Handle password change, if provided
-        if (password !== undefined) {
-            const hash = await bcrypt.hash(password, saltRounds);
-            data.password = hash;
-        }
+        const updatedUser = await UserService.updateUser(user_id, current_oId, userData);
 
-        // Update the user in the database
-        const updateUser = await prisma.users.update({
-            where: {
-                user_id: parseInt(user_id),  // Ensure type safety
-                org_id: parseInt(current_oId)
-            },
-            data
-        });
-
-        // Handle no user found
-        if (!updateUser) {
+        if (!updatedUser) {
             return res.status(404).json({ message: "User not found" });
         }
 
-        res.json(updateUser);
+        res.json(updatedUser);
     } catch (err) {
-        if (err instanceof prisma.PrismaClientKnownRequestError) {
-            // You can add specific error handling for Prisma errors here
+        if (err instanceof Prisma.PrismaClientKnownRequestError) {
             res.status(400).json({ message: "Bad request", details: err.message });
         } else {
             next(err);

@@ -525,7 +525,7 @@
         "tags": [
           "Users"
         ],
-        "summary": "Update an user by ID",
+        "summary": "Update a user by ID",
         "parameters": [
           {
             "name": "user_id",
@@ -557,6 +557,93 @@
                   "password": {
                     "type": "string",
                     "example": "Newpassword123!"
+                  },
+                  "address": {
+                    "type": "object",
+                    "properties": {
+                      "address_line1": {
+                        "type": "string",
+                        "example": "123 Main St"
+                      },
+                      "address_line2": {
+                        "type": "string",
+                        "example": "Apt 4B"
+                      },
+                      "suburb": {
+                        "type": "string",
+                        "example": "Cityville"
+                      },
+                      "state": {
+                        "type": "string",
+                        "example": "State"
+                      },
+                      "postal_code": {
+                        "type": "string",
+                        "example": "12345"
+                      },
+                      "country": {
+                        "type": "string",
+                        "example": "Country"
+                      }
+                    }
+                  },
+                  "contact": {
+                    "type": "object",
+                    "properties": {
+                      "phone": {
+                        "type": "string",
+                        "example": "+1234567890"
+                      },
+                      "mobile": {
+                        "type": "string",
+                        "example": "+1987654321"
+                      },
+                      "fax": {
+                        "type": "string",
+                        "example": "+1122334455"
+                      }
+                    }
+                  },
+                  "dates": {
+                    "type": "object",
+                    "properties": {
+                      "probationary_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2023-07-01"
+                      },
+                      "performance_review_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2023-12-31"
+                      }
+                    }
+                  },
+                  "documents": {
+                    "type": "object",
+                    "properties": {
+                      "passport_number": {
+                        "type": "string",
+                        "example": "AB1234567"
+                      },
+                      "passport_nationality": {
+                        "type": "string",
+                        "example": "USA"
+                      },
+                      "passport_expiry_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2028-06-30"
+                      },
+                      "drivers_license_number": {
+                        "type": "string",
+                        "example": "DL987654321"
+                      },
+                      "frequent_flyer_number": {
+                        "type": "string",
+                        "example": "FF123456789"
+                      }
+                    }
                   }
                 }
               }
@@ -571,6 +658,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "user_id": {
+                      "type": "integer"
+                    },
                     "first_name": {
                       "type": "string"
                     },
@@ -580,8 +670,49 @@
                     "primary_email": {
                       "type": "string"
                     },
-                    "password": {
-                      "type": "string"
+                    "org_id": {
+                      "type": "integer"
+                    },
+                    "address": {
+                      "type": "object"
+                    },
+                    "contact": {
+                      "type": "object"
+                    },
+                    "dates": {
+                      "type": "object"
+                    },
+                    "documents": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "msg": {
+                            "type": "string"
+                          },
+                          "param": {
+                            "type": "string"
+                          },
+                          "location": {
+                            "type": "string"
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -592,20 +723,7 @@
             "description": "Unauthorized"
           },
           "404": {
-            "description": "User not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "User not found"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "User not found"
           }
         }
       },
