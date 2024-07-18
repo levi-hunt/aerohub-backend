@@ -100,6 +100,7 @@ enum roles {
   HSEQ
   OPERATIONS
   PILOT
+  GLOBAL_ADMINISTRATOR
 }
 
 model action_register {
@@ -208,8 +209,6 @@ model risks {
   // Relationships
   owner          users            @relation(fields: [risk_owner], references: [user_id])
   risk_equipment risk_equipment[]
-
-  @@map("risks")
 }
 
 model risk_equipment {
