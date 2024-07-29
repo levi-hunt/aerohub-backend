@@ -9,6 +9,7 @@ import auth from './middlewares/auth.js'
 import userRoutes from './routes/users.js';
 import orgRoutes from './routes/organisations.js';
 import authRoutes from './routes/auth.js'
+import hazardRoutes from './routes/hazards.js'
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -46,6 +47,7 @@ app.use('/', auth)
 // API routes
 app.use('/users', userRoutes);
 app.use('/organisations', orgRoutes);
+app.use('/hazards', hazardRoutes);
 
 // Graceful shutdown
 process.on('SIGTERM', async () => {

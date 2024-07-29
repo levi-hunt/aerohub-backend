@@ -1,6 +1,7 @@
-import { Prisma, PrismaClient, roles } from '@prisma/client'
+import pkg from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import UserService from '../services/UserService.js';
+const { Prisma, PrismaClient, roles } = pkg;
 const prisma = new PrismaClient()
 
 // GET User Unique
