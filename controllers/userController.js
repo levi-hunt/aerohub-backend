@@ -25,12 +25,35 @@ const getUser = async (req, res, next) => {
 
 // UPDATE Unique User
 const updateUser = async (req, res, next) => {
-    const current_oId = req.user.org_id;
-    const { user_id } = req.params;
+    const currentOrgId = parseInt(req.user.org_id);
+    const { user_id } = parseInt(req.params);
+    const targetUserId = user_id
     const userData = req.body;
 
     try {
-        const updatedUser = await UserService.updateUser(user_id, current_oId, userData);
+        const currentUser = await prisma.users.findUnique({
+            where: {
+                user_id,
+                org_id: currentOrgId,
+            },
+            select: {
+                user_id: true,
+                role: true
+            }
+        })
+
+        console.log(currentUser.user_id);
+        console.log(targetUserId)
+        if (currentUser.user_id != targetUserId) {
+            res.status(401).json({ message: "Unauthorized", details: "You're not authorized to make changes to this account." })
+        }
+
+    } catch (err) {
+        res.status(400).json({ message: "Bad request", details: err.message });
+    }
+
+    try {
+        const updatedUser = await UserService.updateUser(targetUserId, currentOrgId, userData);
 
         if (!updatedUser) {
             return res.status(404).json({ message: "User not found" });
